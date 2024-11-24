@@ -16,7 +16,13 @@ Còn với SSRF, Untrust Data nằm ở tính năng xử lý URL ( Như Fetch im
 **Bản chất SSRF là giả mạo server và gửi đi các request dưới danh nghĩa của server đó**
 
 ```
-Giả sử như server đã phân quyền không cho phép 'source ip' bên ngoài mạng nội bộ truy cập vào các api ở nội bộ thì "liệu rằng có những cách nào để giả mạo source ip?" Rất khó để có thể thay đổi source ip, không đơn giản như việc thay đổi thông tin của các header ở gói HTTP request. ( Khi có một gói tin gửi đến server, server sẽ unpack gói tin thông qua các lớp trong mô hình OSI và kiểm tra địa chỉ nguồn, tức là nơi gần nhất gửi request đến server. Ví dụ như Internal web được đóng gói trong docker và được chạy trên môi trường host, thì khi gửi các gói tin đến server, docker sẽ đóng vai trò như một forward proxy, chuyển tiếp các gói tin liên lạc giữa host và guest. Trong trường hợp này thì source ip sẽ là ip của docker engine chứ không phải của host hay guest, mặc dù ở máy host đã truy cập dưới dạng localhost)
+Giả sử như server đã phân quyền không cho phép 'source ip' bên ngoài mạng nội bộ truy cập
+vào các api ở nội bộ thì "liệu rằng có những cách nào để giả mạo source ip?"
+Rất khó để có thể thay đổi source ip, không đơn giản như việc thay đổi thông tin của các header ở gói HTTP request.
+( Khi có một gói tin gửi đến server, server sẽ unpack gói tin thông qua các lớp trong mô hình OSI và kiểm tra địa chỉ nguồn, tức là nơi gần nhất gửi request đến server.
+Ví dụ như Internal web được đóng gói trong docker và được chạy trên môi trường host, thì khi gửi các gói tin đến server, docker sẽ đóng vai trò như một forward proxy,
+chuyển tiếp các gói tin liên lạc giữa host và guest. Trong trường hợp này thì source ip sẽ
+là ip của docker engine chứ không phải của host hay guest, mặc dù ở máy host đã truy cập dưới dạng localhost)
 ```
 
 Trong Networking có một địa chỉ IP đặc biệt đó chính là `localhost` hay là `127.0.0.1`, còn được gọi là loopback. Địa chỉ này sẽ khiến cho gói tin `call-back` lại chính máy của mình, hay trong trường hợp khai thác SSRF, gói tin sẽ `call-back` lại chính Internal Server.
